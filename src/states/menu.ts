@@ -1,4 +1,3 @@
-import 'phaser-shim';
 import { Play } from './play';
 
 export class Menu extends Phaser.State {

@@ -1,5 +1,3 @@
-import 'phaser-shim';
-
 export class Win extends Phaser.State {
   static NAME = 'Win';
 

@@ -1,5 +1,3 @@
-import 'phaser-shim';
-
 export class Play extends Phaser.State {
   static NAME = 'Play';
 

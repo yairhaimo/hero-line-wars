@@ -2,14 +2,8 @@
   "compilerOptions": {
     "outDir": "dist/",
     "module": "commonjs",
-    "target": "es5",
-    "sourceMap": true,
-    "allowJs": true,
-    "typeRoots": [
-      "node_modules/phaser/typescript",
-      "node_modules/phaser-shim/phaser-shim.d.ts",
-      "node_modules/phaser-shim/typescript/phaser.d.ts",
-      "node_modules/@develephant/types-phaser"
-    ]
-  }
+    "target": "es6",
+    "sourceMap": true
+  },
+  "files": ["./src/app.ts", "./node_modules/phaser-ce/typescript/phaser.comments.d.ts"]
 }

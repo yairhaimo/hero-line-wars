@@ -1,11 +1,8 @@
-import 'phaser-shim';
 import { Menu } from './menu';
 // import { IMAGES } from '../definitions';
 
 export class Load extends Phaser.State {
   static NAME = 'Load';
-
-  init(settings) {}
 
   preload() {
     console.log('load preload');
