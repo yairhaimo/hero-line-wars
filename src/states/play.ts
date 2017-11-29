@@ -1,3 +1,5 @@
+import { Player } from '../objects/player';
+
 export class Play extends Phaser.State {
   static NAME = 'Play';
 

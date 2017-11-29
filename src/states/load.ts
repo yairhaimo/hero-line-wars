@@ -6,6 +6,9 @@ export class Load extends Phaser.State {
 
   preload() {
     console.log('load preload');
+    // show loader (that we loaded in BOOT)
+    // load assets for game
+
     // this.game.loadImage(IMAGES.CLOUD);
     // this.game.loadImage(IMAGES.GROUND);
     // this.game.loadImage(IMAGES.STAR);
