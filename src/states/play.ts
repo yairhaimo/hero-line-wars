@@ -106,7 +106,13 @@ export class Play extends BaseState {
 
   private startHeroRespawn() {
     this.hero.isRespawning = true;
-    this.game.time.events.add(Phaser.Timer.SECOND * 5, this.createHero, this);
+    this.game.time.events.add(Phaser.Timer.SECOND * 2, this.respawnHero, this);
+  }
+
+  private respawnHero() {
+    this.hero.revive();
+    this.hero.reset(100, 385, 30);
+    this.camera.focusOnXY(100, 385);
   }
 
   update() {

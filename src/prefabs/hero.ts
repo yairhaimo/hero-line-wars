@@ -31,6 +31,8 @@ export class Hero extends BaseSprite {
     this.colliders = colliders;
     this.attributes = attributes;
     this.health = attributes.health;
+
+    this.events.onRevived.add(this.onRevive, this);
   }
 
   private addToGame() {
@@ -130,5 +132,9 @@ export class Hero extends BaseSprite {
   private turnDown() {
     this.turnRight();
     this.angle = 90;
+  }
+
+  private onRevive() {
+    this.isRespawning = false;
   }
 }
