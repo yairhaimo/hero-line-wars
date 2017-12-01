@@ -9,6 +9,8 @@ export class Hero extends BaseSprite {
     DIE: 'die'
   };
   private SCALE: number = 0.5;
+  private isHurting: boolean = false;
+  private isDying: boolean = false;
   private cursors: Phaser.CursorKeys;
   private colliders: any[];
   private attributes: IHero;
@@ -60,19 +62,22 @@ export class Hero extends BaseSprite {
   public damage(amount: number): BaseSprite {
     super.damage(amount);
     if (this.health > 0) {
-      this.animations.play(this.ANIMATIONS.HURT);
+      this.isHurting = true;
+      const hurtAnimation = this.animations.play(this.ANIMATIONS.HURT);
+      hurtAnimation.onComplete.add(() => (this.isHurting = false));
     }
     return this;
   }
 
   private die(cb) {
+    this.stopMoving();
     this.turnRight();
     const deathAnimation = this.animations.play(this.ANIMATIONS.DIE);
     deathAnimation.onComplete.add(() => {
-      const emitter = this.game.add.emitter(this.x, this.y, 100);
+      const emitter = this.game.add.emitter(this.x, this.y, 80);
       emitter.makeParticles(this.assets.PARTICLE);
-      emitter.minParticleSpeed.setTo(-40, -40);
-      emitter.maxParticleSpeed.setTo(40, 40);
+      emitter.minParticleSpeed.setTo(-80, -80);
+      emitter.maxParticleSpeed.setTo(80, 80);
       emitter.gravity.y = 0;
       emitter.gravity.x = 0;
       emitter.start(true, 800, null, 100);
@@ -80,18 +85,26 @@ export class Hero extends BaseSprite {
     });
   }
 
+  private stopMoving() {
+    this.body.velocity.x = 0;
+    this.body.velocity.y = 0;
+  }
+
   public update() {
+    if (this.isDying) {
+      return;
+    }
     this.colliders.forEach(collider =>
       this.game.physics.arcade.collide(this, collider, () => this.game.camera.shake(0.0005, 200))
     );
     if (this.cursors.right.isDown) {
       this.body.velocity.x = this.attributes.speed;
       this.turnRight();
-      this.animations.play(this.ANIMATIONS.WALK);
+      this.playWalkAnimation();
     } else if (this.cursors.left.isDown) {
       this.body.velocity.x = this.attributes.speed * -1;
       this.turnLeft();
-      this.animations.play(this.ANIMATIONS.WALK);
+      this.playWalkAnimation();
     } else {
       this.body.velocity.x = 0;
     }
@@ -99,11 +112,11 @@ export class Hero extends BaseSprite {
     if (this.cursors.up.isDown) {
       this.body.velocity.y = this.attributes.speed * -1;
       this.turnUp();
-      this.animations.play(this.ANIMATIONS.WALK);
+      this.playWalkAnimation();
     } else if (this.cursors.down.isDown) {
       this.body.velocity.y = this.attributes.speed;
       this.turnDown();
-      this.animations.play(this.ANIMATIONS.WALK);
+      this.playWalkAnimation();
     } else {
       this.body.velocity.y = 0;
     }
@@ -114,12 +127,19 @@ export class Hero extends BaseSprite {
       !this.cursors.left.isDown &&
       !this.cursors.right.isDown
     ) {
-      // this.frame = 0;
+      this.frame = 0;
+    }
+  }
+
+  private playWalkAnimation() {
+    if (!this.isHurting) {
+      this.animations.play(this.ANIMATIONS.WALK);
     }
   }
 
   kill(): BaseSprite {
-    this.animations.stop();
+    console.log('killed');
+    this.isDying = true;
     this.die(() => super.kill());
     return this;
   }
@@ -145,6 +165,9 @@ export class Hero extends BaseSprite {
   }
 
   private onRevive() {
+    this.isHurting = false;
+    this.isDying = false;
     this.isRespawning = false;
+    this.frame = 0;
   }
 }
