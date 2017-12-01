@@ -1,6 +1,5 @@
 import { Menu } from './menu';
 import { BaseState } from './baseState';
-// import { IMAGES } from '../definitions';
 
 export class Load extends BaseState {
   static NAME = 'Load';
@@ -10,6 +9,11 @@ export class Load extends BaseState {
     // show loader (that we loaded in BOOT)
     // load assets for game
     this.loadSpritesheet(this.assets.HERO);
+    this.loadSpritesheet(this.assets.MONSTER);
+    this.loadTileMap(this.assets.MAP);
+    this.loadImage(this.assets.ROAD);
+    this.loadImage(this.assets.WALL);
+    this.loadImage(this.assets.PARTICLE);
   }
 
   create() {

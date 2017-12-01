@@ -12,18 +12,18 @@ const p2 = path.join(phaserModule, 'build/custom/p2.js');
 
 module.exports = {
   entry: {
-    app: ['./src/app.ts'],
-    vendor: ['pixi', 'p2', 'phaser']
+    app: ['./src/app.ts']
+    // vendor: ['pixi', 'p2', 'phaser']
   },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
-  // externals: {
-  //   pixi: 'pixi',
-  //   p2: 'p2',
-  //   'phaser-ce': 'Phaser'
-  // },
+  externals: {
+    pixi: 'pixi',
+    p2: 'p2',
+    'phaser-ce': 'Phaser'
+  },
   module: {
     rules: [
       { test: /pixi\.js/, use: ['expose-loader?PIXI'] },
@@ -42,17 +42,17 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor' /* chunkName= */,
-      filename: 'vendor.bundle.js' /* filename= */
-    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'vendor' /* chunkName= */,
+    //   filename: 'vendor.bundle.js' /* filename= */
+    // }),
     new CleanWebpackPlugin(['dist']),
     new CopyWebpackPlugin([{ from: 'assets', to: 'assets' }]),
     new UglifyJSPlugin(),
     new HtmlWebpackPlugin({
       title: 'Game',
       template: 'index.html',
-      chunks: ['vendor', 'app'],
+      chunks: [/*'vendor',*/ 'app'],
       chunksSortMode: 'manual',
       minify: {
         removeAttributeQuotes: false,

@@ -1,6 +1,6 @@
-import 'p2';
-import 'pixi';
-import 'phaser';
+// import 'p2';
+// import 'pixi';
+// import 'phaser';
 import { Game } from './game';
 import { Boot, Win, Play, Menu, Load, Lose } from './states';
 
