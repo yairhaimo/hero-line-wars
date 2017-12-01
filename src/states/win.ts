@@ -1,4 +1,6 @@
-export class Win extends Phaser.State {
+import { BaseState } from './baseState';
+
+export class Win extends BaseState {
   static NAME = 'Win';
 
   preload() {

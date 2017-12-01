@@ -1,6 +1,7 @@
 import { Load } from './load';
+import { BaseState } from './baseState';
 
-export class Boot extends Phaser.State {
+export class Boot extends BaseState {
   static NAME = 'Boot';
 
   init() {

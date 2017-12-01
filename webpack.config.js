@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/');
 const phaser = path.join(phaserModule, 'build/custom/phaser-split.js');
@@ -46,6 +47,7 @@ module.exports = {
       filename: 'vendor.bundle.js' /* filename= */
     }),
     new CleanWebpackPlugin(['dist']),
+    new CopyWebpackPlugin([{ from: 'assets', to: 'assets' }]),
     new UglifyJSPlugin(),
     new HtmlWebpackPlugin({
       title: 'Game',

@@ -1,13 +1,16 @@
 import { Play } from './play';
+import { BaseState } from './baseState';
 
-export class Menu extends Phaser.State {
+export class Menu extends BaseState {
   static NAME = 'Menu';
 
   preload() {
     console.log('menu preload');
   }
 
-  create() {}
+  create() {
+    this.startGame();
+  }
 
   update() {}
 
