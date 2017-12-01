@@ -2,6 +2,7 @@ interface IMob {
   health: number;
   damage: number;
   range: number;
+  speed: number;
 }
 
 interface IHero extends IMob {}
@@ -14,11 +15,22 @@ interface IStage {
     damage: number;
     health: number;
     range: number;
-    start: {
+    speed: number;
+    startPosition: {
       x: number;
       y: number;
     };
   };
+  beacon: {
+    position: {
+      x: number;
+      y: number;
+    };
+  };
+}
+
+interface IBeacon {
+  health: number;
 }
 
 declare var require: {

@@ -14,6 +14,7 @@ export class Load extends BaseState {
     this.loadImage(this.assets.ROAD);
     this.loadImage(this.assets.WALL);
     this.loadImage(this.assets.PARTICLE);
+    this.loadImage(this.assets.BEACON);
   }
 
   create() {

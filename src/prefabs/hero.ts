@@ -3,7 +3,6 @@ import { assets } from '../definitions';
 import { Game } from '../game';
 
 export class Hero extends BaseSprite {
-  private VELOCITY: number = 100;
   private ANIMATIONS = {
     WALK: 'walk'
   };
@@ -11,6 +10,7 @@ export class Hero extends BaseSprite {
   private cursors: Phaser.CursorKeys;
   private colliders: any[];
   private attributes: IHero;
+  public isRespawning: boolean = false;
 
   constructor({
     game,
@@ -40,8 +40,7 @@ export class Hero extends BaseSprite {
   private init() {
     this.anchor.setTo(0.5);
     this.scale.setTo(this.SCALE);
-    // this.game.physics.arcade.enable(this);
-    this.game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.game.physics.arcade.enable(this);
     this.body.collideWorldBounds = true;
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.defineAnimation();
@@ -80,11 +79,11 @@ export class Hero extends BaseSprite {
       this.game.physics.arcade.collide(this, collider, () => this.game.camera.shake(0.0005, 200))
     );
     if (this.cursors.right.isDown) {
-      this.body.velocity.x = this.VELOCITY;
+      this.body.velocity.x = this.attributes.speed;
       this.turnRight();
       this.animations.play(this.ANIMATIONS.WALK);
     } else if (this.cursors.left.isDown) {
-      this.body.velocity.x = this.VELOCITY * -1;
+      this.body.velocity.x = this.attributes.speed * -1;
       this.turnLeft();
       this.animations.play(this.ANIMATIONS.WALK);
     } else {
@@ -92,11 +91,11 @@ export class Hero extends BaseSprite {
     }
 
     if (this.cursors.up.isDown) {
-      this.body.velocity.y = this.VELOCITY * -1;
+      this.body.velocity.y = this.attributes.speed * -1;
       this.turnUp();
       this.animations.play(this.ANIMATIONS.WALK);
     } else if (this.cursors.down.isDown) {
-      this.body.velocity.y = this.VELOCITY;
+      this.body.velocity.y = this.attributes.speed;
       this.turnDown();
       this.animations.play(this.ANIMATIONS.WALK);
     } else {

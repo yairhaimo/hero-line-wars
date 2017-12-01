@@ -5,6 +5,7 @@ export const assets = {
   ROAD: 'road',
   WALL: 'wall',
   PARTICLE: 'particle',
+  BEACON: 'beacon',
   STAGE: 'stage'
 };
 

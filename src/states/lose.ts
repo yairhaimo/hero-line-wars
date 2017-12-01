@@ -7,7 +7,9 @@ export class Lose extends BaseState {
     console.log('lose preload');
   }
 
-  create() {}
+  create() {
+    console.log('you have lost');
+  }
 
   update() {}
 }

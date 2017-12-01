@@ -1,12 +1,19 @@
 {
   "monsters": {
-    "interval": 3,
+    "interval": 0.1,
     "damage": 10,
     "health": 30,
     "range": 0,
-    "start": {
+    "speed": 250,
+    "startPosition": {
       "x": 2400,
       "y": 150
+    }
+  },
+  "beacon": {
+    "position": {
+      "x": 100,
+      "y": 385
     }
   }
 }
