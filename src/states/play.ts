@@ -65,6 +65,7 @@ export class Play extends BaseState {
         attributes: {
           damage: stage.monsters.damage,
           health: stage.monsters.health,
+          mana: stage.monsters.mana,
           range: stage.monsters.range,
           speed: stage.monsters.speed
         }
@@ -86,6 +87,7 @@ export class Play extends BaseState {
       attributes: {
         health: 30,
         damage: 10,
+        mana: 100,
         range: 100,
         speed: 400
       }

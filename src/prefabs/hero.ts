@@ -15,6 +15,9 @@ export class Hero extends BaseSprite {
   private colliders: any[];
   private attributes: IHero;
   public isRespawning: boolean = false;
+  private get canShoot() {
+    return this.attributes.range > 0;
+  }
 
   constructor({
     game,

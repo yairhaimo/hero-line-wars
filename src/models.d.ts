@@ -1,5 +1,6 @@
 interface IMob {
   health: number;
+  mana: number;
   damage: number;
   range: number;
   speed: number;
@@ -14,6 +15,7 @@ interface IStage {
     interval: number;
     damage: number;
     health: number;
+    mana: number;
     range: number;
     speed: number;
     startPosition: {
