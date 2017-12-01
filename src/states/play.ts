@@ -52,7 +52,7 @@ export class Play extends BaseState {
 
   private createMonster() {
     let monster: BaseSprite = this.monsters.getFirstDead();
-    console.log('num of monsters', this.monsters.children);
+    console.log('num of monsters', this.monsters.children.length);
     if (!monster) {
       monster = new Monster(this.game as Game, {
         game2: this.game as Game,
@@ -78,16 +78,16 @@ export class Play extends BaseState {
   private createHero() {
     this.hero = new Hero({
       game: this.game as Game,
-      xPos: 100,
-      yPos: 385,
-      // xPos: 2200,
-      // yPos: 150,
+      // xPos: 100,
+      // yPos: 385,
+      xPos: 2200,
+      yPos: 150,
       colliders: [this.walls],
       attributes: {
         health: 30,
         damage: 10,
         range: 100,
-        speed: 200
+        speed: 400
       }
     });
     this.camera.follow(this.hero);
@@ -111,7 +111,7 @@ export class Play extends BaseState {
 
   private respawnHero() {
     this.hero.revive();
-    this.hero.reset(100, 385, 30);
+    this.hero.reset(100, 385, this.hero.maxHealth);
     this.camera.focusOnXY(100, 385);
   }
 
@@ -133,7 +133,6 @@ export class Play extends BaseState {
   }
 
   private damageBeacon(beacon, monster) {
-    console.log('damage beacon');
     beacon.damage(monster.attributes.damage);
     monster.kill();
   }

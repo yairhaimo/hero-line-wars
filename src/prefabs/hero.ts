@@ -4,7 +4,9 @@ import { Game } from '../game';
 
 export class Hero extends BaseSprite {
   private ANIMATIONS = {
-    WALK: 'walk'
+    WALK: 'walk',
+    HURT: 'hurt',
+    DIE: 'die'
   };
   private SCALE: number = 0.5;
   private cursors: Phaser.CursorKeys;
@@ -30,9 +32,10 @@ export class Hero extends BaseSprite {
     this.addToGame();
     this.colliders = colliders;
     this.attributes = attributes;
-    this.health = attributes.health;
+    this.health = this.maxHealth = attributes.health;
 
     this.events.onRevived.add(this.onRevive, this);
+    // this.events.onKilled.add(this.onKilled, this);
   }
 
   private addToGame() {
@@ -45,35 +48,36 @@ export class Hero extends BaseSprite {
     this.game.physics.arcade.enable(this);
     this.body.collideWorldBounds = true;
     this.cursors = this.game.input.keyboard.createCursorKeys();
-    this.defineAnimation();
+    this.defineAnimations();
   }
 
-  private defineAnimation() {
+  private defineAnimations() {
     this.animations.add(this.ANIMATIONS.WALK, [0, 1, 2, 3], 16, true);
-  }
-
-  private isDead() {
-    return this.health <= 0;
+    this.animations.add(this.ANIMATIONS.HURT, [0, 4], 6, false);
+    this.animations.add(this.ANIMATIONS.DIE, [0, 4, 5, 5, 5], 6, false);
   }
 
   public damage(amount: number): BaseSprite {
     super.damage(amount);
-    // TODO: play get hit animation
-    this.frame = 3;
-    if (this.isDead()) {
-      this.die();
+    if (this.health > 0) {
+      this.animations.play(this.ANIMATIONS.HURT);
     }
     return this;
   }
 
-  private die() {
-    const emitter = this.game.add.emitter(this.x, this.y, 100);
-    emitter.makeParticles(this.assets.PARTICLE);
-    emitter.minParticleSpeed.setTo(-40, -40);
-    emitter.maxParticleSpeed.setTo(40, 40);
-    emitter.gravity.y = 0;
-    emitter.gravity.x = 0;
-    emitter.start(true, 800, null, 100);
+  private die(cb) {
+    this.turnRight();
+    const deathAnimation = this.animations.play(this.ANIMATIONS.DIE);
+    deathAnimation.onComplete.add(() => {
+      const emitter = this.game.add.emitter(this.x, this.y, 100);
+      emitter.makeParticles(this.assets.PARTICLE);
+      emitter.minParticleSpeed.setTo(-40, -40);
+      emitter.maxParticleSpeed.setTo(40, 40);
+      emitter.gravity.y = 0;
+      emitter.gravity.x = 0;
+      emitter.start(true, 800, null, 100);
+      cb();
+    });
   }
 
   public update() {
@@ -110,8 +114,14 @@ export class Hero extends BaseSprite {
       !this.cursors.left.isDown &&
       !this.cursors.right.isDown
     ) {
-      this.frame = 0;
+      // this.frame = 0;
     }
+  }
+
+  kill(): BaseSprite {
+    this.animations.stop();
+    this.die(() => super.kill());
+    return this;
   }
 
   private turnLeft() {

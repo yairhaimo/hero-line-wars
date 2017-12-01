@@ -67,10 +67,10 @@ export class Monster extends BaseSprite {
     const startTileY = Math.floor(this.y / this.map.tileHeight);
     const endTileX = Math.floor(this.beacon.position.x / this.map.tileWidth);
     const endTileY = Math.floor(this.beacon.position.y / this.map.tileHeight);
-    console.log('calc', [startTileX, startTileY], [endTileX, endTileY]);
+    // console.log('calc', [startTileX, startTileY], [endTileX, endTileY]);
     const pathfinder = this.game.pathfinder;
     pathfinder.setCallbackFunction(path => {
-      console.log('path is', path);
+      // console.log('path is', path);
     });
     pathfinder.preparePathCalculation([startTileX, startTileY], [endTileX, endTileY]);
     pathfinder.calculatePath();
