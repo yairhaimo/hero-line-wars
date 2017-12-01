@@ -22,6 +22,7 @@ interface IStage {
     };
   };
   beacon: {
+    health: number;
     position: {
       x: number;
       y: number;

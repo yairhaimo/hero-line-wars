@@ -39,7 +39,7 @@ export class Play extends BaseState {
       yPos: stage.beacon.position.y,
       game: this.game as Game,
       attributes: {
-        health: 1000
+        health: stage.beacon.health
       }
     });
   }
@@ -111,8 +111,9 @@ export class Play extends BaseState {
 
   private respawnHero() {
     this.hero.revive();
-    this.hero.reset(100, 385, this.hero.maxHealth);
-    this.camera.focusOnXY(100, 385);
+    this.hero.reset(this.beacon.x, this.beacon.y, this.hero.maxHealth);
+    // this.camera.x = this.beacon.x;
+    // this.camera.y = this.beacon.y;
   }
 
   update() {

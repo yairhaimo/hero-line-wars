@@ -4,13 +4,14 @@
     "damage": 10,
     "health": 30,
     "range": 0,
-    "speed": 100,
+    "speed": 200,
     "startPosition": {
       "x": 2400,
       "y": 150
     }
   },
   "beacon": {
+    "health": 100,
     "position": {
       "x": 100,
       "y": 385
