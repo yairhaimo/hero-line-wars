@@ -35,6 +35,11 @@ module.exports = {
       //   use: 'script-loader'
       // },
       {
+        test: /\.json$/,
+        use: 'json-loader',
+        exclude: /node_modules/
+      },
+      {
         test: /\.[jt]s$/,
         use: 'ts-loader',
         exclude: /node_modules/
@@ -68,7 +73,7 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js', '.json'],
     alias: {
       phaser: phaser,
       pixi: pixi,

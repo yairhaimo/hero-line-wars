@@ -10,6 +10,7 @@ export class Hero extends BaseSprite {
   private SCALE: number = 0.5;
   private cursors: Phaser.CursorKeys;
   private colliders: any[];
+  private attributes: IHero;
 
   constructor({
     game,
@@ -28,6 +29,7 @@ export class Hero extends BaseSprite {
     this.init();
     this.addToGame();
     this.colliders = colliders;
+    this.attributes = attributes;
     this.health = attributes.health;
   }
 

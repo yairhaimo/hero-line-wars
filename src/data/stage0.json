@@ -1,0 +1,12 @@
+{
+  "monsters": {
+    "interval": 3,
+    "damage": 10,
+    "health": 30,
+    "range": 0,
+    "start": {
+      "x": 2400,
+      "y": 150
+    }
+  }
+}

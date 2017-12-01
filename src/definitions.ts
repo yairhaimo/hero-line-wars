@@ -4,7 +4,8 @@ export const assets = {
   MAP: 'map',
   ROAD: 'road',
   WALL: 'wall',
-  PARTICLE: 'particle'
+  PARTICLE: 'particle',
+  STAGE: 'stage'
 };
 
 export const size = {

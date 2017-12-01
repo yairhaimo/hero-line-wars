@@ -3,6 +3,7 @@ import { Monster } from '../prefabs/monster';
 import { BaseState } from './baseState';
 import { size } from '../definitions';
 import { BaseSprite } from '../prefabs/baseSprite';
+const stage: IStage = require('../data/stage0.json');
 
 export class Play extends BaseState {
   static NAME = 'Play';
@@ -20,7 +21,7 @@ export class Play extends BaseState {
     this.createHero();
     this.monsters = this.game.add.group();
     this.createMonster();
-    this.game.time.events.loop(Phaser.Timer.SECOND * 1, this.createMonster, this);
+    this.game.time.events.loop(Phaser.Timer.SECOND * stage.monsters.interval, this.createMonster, this);
   }
 
   private createMonster() {
@@ -28,24 +29,15 @@ export class Play extends BaseState {
     if (!monster) {
       monster = new Monster({
         game: this.game,
-        xPos: 2400,
-        yPos: 150,
+        xPos: stage.monsters.start.x,
+        yPos: stage.monsters.start.y,
         colliders: [this.walls],
         hero: this.hero
       });
       this.monsters.add(monster);
     } else {
-      monster.reset(2400, 150);
+      monster.reset(stage.monsters.start.x, stage.monsters.start.y);
     }
-    // this.game.add.existing(monster);
-
-    // const monster2 = new Monster({
-    //   game: this.game,
-    //   xPos: 2400,
-    //   yPos: 615,
-    //   colliders: [this.walls]
-    // });
-    // this.game.add.existing(monster2);
   }
 
   private createHero() {
@@ -57,7 +49,9 @@ export class Play extends BaseState {
       yPos: 150,
       colliders: [this.walls],
       attributes: {
-        health: 30
+        health: 30,
+        damage: 10,
+        range: 100
       }
     });
     this.camera.follow(this.hero);
@@ -70,7 +64,8 @@ export class Play extends BaseState {
     this.roads = map.createLayer(this.assets.ROAD);
     this.walls = map.createLayer(this.assets.WALL);
     this.roads.resizeWorld();
-    map.setCollision(2, true, this.assets.WALL);
+    const WALL_TILE = 2; // check map.json for tile number
+    map.setCollision(WALL_TILE, true, this.assets.WALL);
   }
 
   update() {

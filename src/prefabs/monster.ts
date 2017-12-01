@@ -1,6 +1,7 @@
 import { BaseSprite } from './baseSprite';
 import { assets } from '../definitions';
 import { Game } from '../game';
+import { Hero } from './hero';
 
 export class Monster extends BaseSprite {
   private VELOCITY: number = 30;
@@ -10,25 +11,30 @@ export class Monster extends BaseSprite {
   private SCALE: number = 0.5;
   private cursors: Phaser.CursorKeys;
   private colliders: any[];
-  private hero: BaseSprite;
+  private hero: Hero;
+  private attributes: IMonster;
 
   constructor({
     game,
     xPos,
     yPos,
     colliders = [],
-    hero
+    hero,
+    attributes
   }: {
     game: Game;
     xPos: number;
     yPos: number;
     colliders?: any[];
-    hero: BaseSprite;
+    hero: Hero;
+    attributes: IMonster;
   }) {
     super(game, xPos, yPos, assets.MONSTER);
     this.init();
     this.colliders = colliders;
     this.hero = hero;
+    this.attributes = attributes;
+    this.health = attributes.health;
   }
 
   private init() {
