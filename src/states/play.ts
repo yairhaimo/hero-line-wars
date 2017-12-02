@@ -30,7 +30,22 @@ export class Play extends BaseState {
   }
 
   private configurePathfinding() {
-    (this.game as Game).pathfinder.setGrid(this.map.layers[0].data, [1]);
+    // const gridIndices = this.map.layers[0].data
+    //   .map((tile, i) => {
+    //     if (this.map.layers[1].data[i] !== 1) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   })
+
+    // const grid_indices = [];
+    // for (let grid_row = 0; grid_row < this.map.layers[0].data.length; grid_row++) {
+    //   grid_indices[grid_row] = [];
+    //   for (let grid_column = 0; grid_column < world_grid[grid_row].length; grid_column += 1) {
+    //     grid_indices[grid_row][grid_column] = world_grid[grid_row][grid_column].index;
+    //   }
+    // }
+    (this.game as Game).pathfinder.setGrid(this.map.layers[1].data, [-1]);
   }
 
   private createBeacon() {
@@ -56,8 +71,8 @@ export class Play extends BaseState {
     if (!monster) {
       monster = new Monster(this.game as Game, {
         game2: this.game as Game,
-        xPos: stage.monsters.startPosition.x,
-        yPos: stage.monsters.startPosition.y,
+        xPos: stage.monsters.startPosition.x + this.game.rnd.integerInRange(-10, 10),
+        yPos: stage.monsters.startPosition.y + this.game.rnd.integerInRange(-10, 10),
         colliders: [this.walls],
         hero: this.hero,
         map: this.map,

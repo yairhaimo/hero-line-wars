@@ -1,11 +1,11 @@
 {
   "monsters": {
-    "interval": 1,
+    "interval": 300,
     "damage": 10,
     "health": 30,
     "mana": 0,
     "range": 0,
-    "speed": 200,
+    "speed": 50,
     "startPosition": {
       "x": 2400,
       "y": 150
