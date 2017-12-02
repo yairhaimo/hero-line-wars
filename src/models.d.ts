@@ -26,6 +26,8 @@ interface IStage {
     mana: number;
     range: number;
     speed: number;
+    xp: number;
+    coins: number;
     startPosition: {
       x: number;
       y: number;

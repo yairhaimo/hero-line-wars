@@ -2,48 +2,48 @@ import { BaseSprite } from './baseSprite';
 import { assets, scale } from '../definitions';
 import { Game } from '../game';
 
-export class HUD implements IHUD {
-  private coinsText: Phaser.Text;
-  private healthText: Phaser.Text;
-  private xpText: Phaser.Text;
-  private killsText: Phaser.Text;
-  private levelText: Phaser.Text;
-  private beaconHealthText: Phaser.Text;
-  public coins: number;
-  public xp: number;
-  public level: number;
-  public kills: number;
-  public health: number;
-  public beaconHealth: number;
+export class HUD {
   private healthHUD = {
-    baseText: 'Health:',
+    text: null,
+    label: 'Health',
     x: 5,
-    y: 5
+    y: 5,
+    value: 0
   };
   private coinsHUD = {
-    baseText: 'Coins:',
+    text: null,
+    label: 'Coins',
     x: 85,
-    y: 5
+    y: 5,
+    value: 0
   };
   private killsHUD = {
-    baseText: 'Kills:',
+    text: null,
+    label: 'Kills',
     x: 165,
-    y: 5
+    y: 5,
+    value: 0
   };
   private xpHUD = {
-    baseText: 'XP:',
+    text: null,
+    label: 'XP',
     x: 245,
-    y: 5
+    y: 5,
+    value: 0
   };
   private levelHUD = {
-    baseText: 'Level:',
+    text: null,
+    label: 'Level',
     x: 325,
-    y: 5
+    y: 5,
+    value: 0
   };
   private beaconHUD = {
-    baseText: 'Beacon Health:',
+    text: null,
+    label: 'Beacon Health',
     x: 405,
-    y: 5
+    y: 5,
+    value: 0
   };
 
   constructor(private game: Game, { health, coins, xp, kills, level, beaconHealth }) {
@@ -56,41 +56,35 @@ export class HUD implements IHUD {
   }
 
   public changeHealth(health) {
-    this.healthText = this.addHUDText(this.healthHUD, health);
-    this.health = health;
+    this.addHUDText(this.healthHUD, health);
   }
 
   public changeBeaconHealth(health) {
-    this.beaconHealthText = this.addHUDText(this.beaconHUD, health);
-    this.beaconHealth = health;
+    this.addHUDText(this.beaconHUD, health);
   }
 
   public changeCoins(coins) {
-    this.coinsText = this.addHUDText(this.coinsHUD, coins);
-    this.coins = coins;
+    this.addHUDText(this.coinsHUD, coins);
   }
 
   public changeXP(xp) {
-    this.xpText = this.addHUDText(this.xpHUD, xp);
-    this.xp = xp;
+    this.addHUDText(this.xpHUD, xp);
   }
 
   public changeKills(kills) {
-    this.killsText = this.addHUDText(this.killsHUD, kills);
-    this.kills = kills;
+    this.addHUDText(this.killsHUD, kills);
   }
 
   public changeLevel(level) {
-    this.levelText = this.addHUDText(this.levelHUD, level);
-    this.level = level;
+    this.addHUDText(this.levelHUD, level);
   }
 
-  private addHUDText(hudValues, extraText?: string) {
-    return this.addText(
-      `${hudValues.baseText}${typeof extraText !== 'undefined' ? ' ' + extraText : ''}`,
-      hudValues.x,
-      hudValues.y
-    );
+  private addHUDText(hudValues, value) {
+    if (!hudValues.text) {
+      hudValues.text = this.addText('', hudValues.x, hudValues.y);
+    }
+    hudValues.text.setText(`${hudValues.label}: ${value}`);
+    hudValues.value = value;
   }
 
   private addText(text, x, y) {

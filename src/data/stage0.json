@@ -6,6 +6,8 @@
     "mana": 0,
     "range": 100,
     "speed": 150,
+    "xp": 10,
+    "coins": 1,
     "startPosition": {
       "x": 1800,
       "y": 180

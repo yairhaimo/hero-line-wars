@@ -177,6 +177,7 @@ export class Play extends BaseState {
   private respawnHero() {
     this.hero.revive();
     this.hero.reset(this.beacon.x, this.beacon.y, this.hero.maxHealth);
+    this.hud.changeHealth(this.hero.health);
   }
 
   update() {
