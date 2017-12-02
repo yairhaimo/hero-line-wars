@@ -10,6 +10,14 @@ interface IHero extends IMob {}
 
 interface IMonster extends IMob {}
 
+interface IHUD {
+  health: number;
+  coins: number;
+  xp: number;
+  level: number;
+  kills: number;
+}
+
 interface IStage {
   monsters: {
     interval: number;

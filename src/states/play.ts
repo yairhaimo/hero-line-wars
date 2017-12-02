@@ -6,6 +6,7 @@ import { size } from '../definitions';
 import { BaseSprite } from '../prefabs/baseSprite';
 import { Game } from '../game';
 import { Lose } from './lose';
+import { HUD } from '../prefabs/HUD';
 const stage: IStage = require('../data/stage0.json');
 
 export class Play extends BaseState {
@@ -16,6 +17,7 @@ export class Play extends BaseState {
   private path: Phaser.TilemapLayer;
   private walls: Phaser.TilemapLayer;
   private monsters: Phaser.Group;
+  private hud: HUD;
 
   preload() {
     console.log('play preload');
@@ -28,6 +30,18 @@ export class Play extends BaseState {
     this.createBeacon();
     this.createHero();
     this.createMonsters();
+    this.createHUD();
+  }
+
+  private createHUD() {
+    this.hud = new HUD(this.game as Game, {
+      health: this.hero.health,
+      xp: 0,
+      kills: 0,
+      coins: 0,
+      level: 1,
+      beaconHealth: this.beacon.health
+    });
   }
 
   private configurePathfinding() {
@@ -166,8 +180,8 @@ export class Play extends BaseState {
   }
 
   update() {
-    this.physics.arcade.collide(this.hero, this.monsters, this.damageHero);
-    this.physics.arcade.overlap(this.beacon, this.monsters, this.damageBeacon);
+    this.physics.arcade.collide(this.hero, this.monsters, this.damageHero, null, this);
+    this.physics.arcade.overlap(this.beacon, this.monsters, this.damageBeacon, null, this);
     this.physics.arcade.overlap(this.monsters, this.hero.weapon.bullets, this.damageMonster, null, this);
   }
 
@@ -178,11 +192,13 @@ export class Play extends BaseState {
 
   private damageHero(hero: Hero, monster: Monster) {
     hero.damage(monster.attributes.damage);
+    this.hud.changeHealth(this.hero.health);
     monster.kill();
   }
 
   private damageBeacon(beacon: Beacon, monster: Monster) {
     beacon.damage(monster.attributes.damage);
+    this.hud.changeBeaconHealth(this.beacon.health);
     monster.kill();
   }
 
