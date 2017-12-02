@@ -10,6 +10,7 @@ interface IHero extends IMob {}
 
 interface IMonster extends IMob {
   xp: number;
+  coins: number;
 }
 
 interface IHUD {

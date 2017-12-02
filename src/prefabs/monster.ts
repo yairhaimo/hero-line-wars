@@ -160,8 +160,4 @@ export class Monster extends BaseSprite {
     this.findPathToBeacon();
     this.startWalking();
   }
-
-  private onKilled() {
-    this.hero.xp += this.attributes.xp;
-  }
 }

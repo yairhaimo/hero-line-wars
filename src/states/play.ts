@@ -79,7 +79,8 @@ export class Play extends BaseState {
           mana: stage.monsters.mana,
           range: stage.monsters.range,
           speed: stage.monsters.speed,
-          xp: stage.monsters.xp
+          xp: stage.monsters.xp,
+          coins: stage.monsters.coins
         }
       });
       this.monsters.add(monster);
@@ -200,6 +201,11 @@ export class Play extends BaseState {
   private damageMonster(monster: Monster, bullet) {
     bullet.kill();
     monster.damage(this.hero.attributes.damage);
+    if (monster.health <= 0) {
+      this.hero.xp += monster.attributes.xp;
+      this.hero.coins += monster.attributes.coins;
+      this.hud.updateHUD();
+    }
   }
 
   // render() {
