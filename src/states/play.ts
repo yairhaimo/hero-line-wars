@@ -25,8 +25,8 @@ export class Play extends BaseState {
     this.createMap();
     this.configurePathfinding();
     this.createBeacon();
-    this.createHero();
     this.createMonsters();
+    this.createHero();
   }
 
   private configurePathfinding() {
@@ -42,6 +42,7 @@ export class Play extends BaseState {
         health: stage.beacon.health
       }
     });
+    this.beacon.events.onKilled.add(this.gameOver, this);
   }
 
   private createMonsters() {
@@ -83,6 +84,7 @@ export class Play extends BaseState {
       xPos: 2200,
       yPos: 150,
       colliders: [this.walls],
+      monsters: this.monsters,
       attributes: {
         health: 30,
         damage: 10,
@@ -92,6 +94,7 @@ export class Play extends BaseState {
       }
     });
     this.camera.follow(this.hero);
+    this.hero.events.onKilled.add(this.startHeroRespawn, this);
   }
 
   private createMap() {
@@ -106,8 +109,10 @@ export class Play extends BaseState {
   }
 
   private startHeroRespawn() {
-    this.hero.isRespawning = true;
-    this.game.time.events.add(Phaser.Timer.SECOND * 2, this.respawnHero, this);
+    if (!this.hero.alive && !this.hero.isRespawning) {
+      this.hero.isRespawning = true;
+      this.game.time.events.add(Phaser.Timer.SECOND * 2, this.respawnHero, this);
+    }
   }
 
   private respawnHero() {
@@ -118,23 +123,27 @@ export class Play extends BaseState {
   update() {
     this.physics.arcade.collide(this.hero, this.monsters, this.damageHero);
     this.physics.arcade.overlap(this.beacon, this.monsters, this.damageBeacon);
-    if (!this.beacon.alive) {
-      this.camera.fade(0, Phaser.Timer.SECOND * 3.1);
-      this.game.time.events.add(Phaser.Timer.SECOND * 3, () => this.game.state.start(Lose.NAME), this);
-    }
-    if (!this.hero.alive && !this.hero.isRespawning) {
-      this.startHeroRespawn();
-    }
+    this.physics.arcade.overlap(this.monsters, this.hero.weapon.bullets, this.damageMonster, null, this);
   }
 
-  private damageHero(hero, monster) {
+  private gameOver() {
+    this.camera.fade(0, Phaser.Timer.SECOND * 3.1);
+    this.game.time.events.add(Phaser.Timer.SECOND * 3, () => this.game.state.start(Lose.NAME), this);
+  }
+
+  private damageHero(hero: Hero, monster: Monster) {
     hero.damage(monster.attributes.damage);
     monster.kill();
   }
 
-  private damageBeacon(beacon, monster) {
+  private damageBeacon(beacon: Beacon, monster: Monster) {
     beacon.damage(monster.attributes.damage);
     monster.kill();
+  }
+
+  private damageMonster(monster: Monster, bullet) {
+    bullet.kill();
+    monster.damage(this.hero.attributes.damage);
   }
 
   // render() {

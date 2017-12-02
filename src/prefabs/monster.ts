@@ -12,12 +12,12 @@ export class Monster extends BaseSprite {
   private cursors: Phaser.CursorKeys;
   private colliders: any[];
   private hero: Hero;
-  private attributes: IMonster;
   private beacon: Beacon;
   private map: Phaser.Tilemap;
   private pathToBeacon: { x: number; y: number }[];
   private isFollowingPath: boolean = false;
   private movingTween: Phaser.Tween;
+  public attributes: IMonster;
 
   constructor(
     public game: Game,

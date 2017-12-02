@@ -1,6 +1,7 @@
 import { BaseSprite } from './baseSprite';
 import { assets } from '../definitions';
 import { Game } from '../game';
+import { Monster } from './monster';
 
 export class Hero extends BaseSprite {
   private ANIMATIONS = {
@@ -13,11 +14,13 @@ export class Hero extends BaseSprite {
   private isDying: boolean = false;
   private cursors: Phaser.CursorKeys;
   private colliders: any[];
-  private attributes: IHero;
-  public isRespawning: boolean = false;
+  private monsters: Phaser.Group;
   private get canShoot() {
     return this.attributes.range > 0;
   }
+  public attributes: IHero;
+  public isRespawning: boolean = false;
+  public weapon: Phaser.Weapon;
 
   constructor(
     public game: Game,
@@ -25,11 +28,13 @@ export class Hero extends BaseSprite {
       xPos,
       yPos,
       colliders = [],
+      monsters,
       attributes
     }: {
       xPos: number;
       yPos: number;
       colliders?: any[];
+      monsters: Phaser.Group;
       attributes: IHero;
     }
   ) {
@@ -39,9 +44,44 @@ export class Hero extends BaseSprite {
     this.colliders = colliders;
     this.attributes = attributes;
     this.health = this.maxHealth = attributes.health;
+    this.monsters = monsters;
+    console.log(this.monsters);
 
     this.events.onRevived.add(this.onRevive, this);
     // this.events.onKilled.add(this.onKilled, this);
+
+    this.configureWeapon();
+
+    // this.game.input.keyboard.addKey(Phaser.Keyboard.ONE).onDown.add(() => {
+    //   const closestMonster = this.getClosestMonster();
+
+    //   console.log(
+    //     'monsters',
+    //     this.monsters.children.map(child => ({ x: child.x, y: child.y })),
+    //     'closest',
+    //     { x: closestMonster.x, y: closestMonster.y },
+    //     'hero',
+    //     { x: this.x, y: this.y }
+    //   );
+    // }, this);
+  }
+
+  private configureWeapon() {
+    this.weapon = this.game.add.weapon(30, this.assets.PARTICLE);
+    this.weapon.bulletSpeed = 300;
+    this.weapon.fireRate = 50;
+    this.weapon.bulletKillType = Phaser.Weapon.KILL_DISTANCE;
+    this.weapon.bulletKillDistance = this.attributes.range;
+    this.weapon.trackSprite(this, 0, 0);
+    // this.weapon.
+  }
+
+  private getClosestMonster() {
+    const sortedByDistance = this.monsters.children.sort(
+      (a, b) => this.x - a.x + this.y - a.y - (this.x - b.x + this.y - b.y)
+    );
+    console.log(sortedByDistance.map(child => ({ x: child.x, y: child.y })));
+    return sortedByDistance[0];
   }
 
   private addToGame() {
@@ -101,30 +141,60 @@ export class Hero extends BaseSprite {
     this.colliders.forEach(collider =>
       this.game.physics.arcade.collide(this, collider, () => this.game.camera.shake(0.0005, 200))
     );
+    this.handleMovement();
     if (this.cursors.right.isDown) {
+      this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
+      this.turnRight();
+      this.weapon.fire();
+    } else if (this.cursors.up.isDown) {
+      this.weapon.fireAngle = Phaser.ANGLE_UP;
+      this.turnUp();
+      this.weapon.fire();
+    } else if (this.cursors.left.isDown) {
+      this.weapon.fireAngle = Phaser.ANGLE_LEFT;
+      this.turnLeft();
+      this.weapon.fire();
+    } else if (this.cursors.down.isDown) {
+      this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+      this.turnDown();
+      this.weapon.fire();
+    }
+    // const closestMonster = this.getClosestMonster();
+    // if (this.position.x > closestMonster.x) {
+    //   this.body.velocity.x = this.attributes.speed * -1;
+    // } else {
+    //   this.body.velocity.x = this.attributes.speed;
+    // }
+    // if (this.position.y > closestMonster.y) {
+    //   this.body.velocity.y = this.attributes.speed * -1;
+    // } else {
+    //   this.body.velocity.y = this.attributes.speed;
+    // }
+  }
+
+  private handleMovement() {
+    if (this.game.input.keyboard.addKey(Phaser.KeyCode.D).isDown) {
       this.body.velocity.x = this.attributes.speed;
       this.turnRight();
       this.playWalkAnimation();
-    } else if (this.cursors.left.isDown) {
+    } else if (this.game.input.keyboard.addKey(Phaser.KeyCode.A).isDown) {
       this.body.velocity.x = this.attributes.speed * -1;
       this.turnLeft();
       this.playWalkAnimation();
     } else {
       this.body.velocity.x = 0;
     }
-
-    if (this.cursors.up.isDown) {
+    if (this.game.input.keyboard.addKey(Phaser.KeyCode.W).isDown) {
       this.body.velocity.y = this.attributes.speed * -1;
       this.turnUp();
       this.playWalkAnimation();
-    } else if (this.cursors.down.isDown) {
+    } else if (this.game.input.keyboard.addKey(Phaser.KeyCode.S).isDown) {
       this.body.velocity.y = this.attributes.speed;
       this.turnDown();
       this.playWalkAnimation();
     } else {
       this.body.velocity.y = 0;
     }
-
     if (
       !this.cursors.up.isDown &&
       !this.cursors.down.isDown &&
