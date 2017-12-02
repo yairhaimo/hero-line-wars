@@ -5,46 +5,49 @@ import { Hero } from './hero';
 import { Beacon } from './beacon';
 
 export class HUD {
+  private SPACING = 80;
+  private MARGIN = 5;
+  private Y = 5;
   private healthHUD = {
     text: null,
     label: 'Health',
-    x: 5,
-    y: 5,
+    index: 0,
+    value: 0
+  };
+  private manaHUD = {
+    text: null,
+    label: 'Mana',
+    index: 1,
     value: 0
   };
   private coinsHUD = {
     text: null,
     label: 'Coins',
-    x: 85,
-    y: 5,
+    index: 2,
     value: 0
   };
   private killsHUD = {
     text: null,
     label: 'Kills',
-    x: 165,
-    y: 5,
+    index: 3,
     value: 0
   };
   private xpHUD = {
     text: null,
     label: 'XP',
-    x: 245,
-    y: 5,
+    index: 4,
     value: 0
   };
   private levelHUD = {
     text: null,
     label: 'Level',
-    x: 325,
-    y: 5,
+    index: 5,
     value: 0
   };
   private beaconHUD = {
     text: null,
     label: 'Beacon Health',
-    x: 405,
-    y: 5,
+    index: 6,
     value: 0
   };
 
@@ -54,6 +57,7 @@ export class HUD {
 
   public updateHUD() {
     this.changeHealth(this.hero.health);
+    this.changeMana(this.hero.attributes.mana);
     this.changeBeaconHealth(this.beacon.health);
     this.changeXP(this.hero.xp);
     this.changeKills(this.hero.kills);
@@ -63,6 +67,10 @@ export class HUD {
 
   public changeHealth(health) {
     this.addHUDText(this.healthHUD, health);
+  }
+
+  public changeMana(mana) {
+    this.addHUDText(this.manaHUD, mana);
   }
 
   public changeBeaconHealth(health) {
@@ -87,7 +95,7 @@ export class HUD {
 
   private addHUDText(hudValues, value) {
     if (!hudValues.text) {
-      hudValues.text = this.addText('', hudValues.x, hudValues.y);
+      hudValues.text = this.addText('', hudValues.index * this.SPACING + this.MARGIN, this.Y);
     }
     hudValues.text.setText(`${hudValues.label}: ${value}`);
     hudValues.value = value;
