@@ -17,6 +17,7 @@ export class Monster extends BaseSprite {
   private pathToBeacon: { x: number; y: number }[];
   private isFollowingPath: boolean = false;
   private movingTween: Phaser.Tween;
+  private isTrackingHero: boolean;
   public attributes: IMonster;
 
   constructor(
@@ -66,7 +67,7 @@ export class Monster extends BaseSprite {
     this.movingTween = this.game.add.tween(this);
     this.movingTween.onComplete.add(() => {
       this.isFollowingPath = false;
-      this.followPath();
+      this.followPathToBeacon();
     });
   }
 
@@ -88,7 +89,7 @@ export class Monster extends BaseSprite {
     pathfinder.calculatePath();
   }
 
-  private followPath() {
+  private followPathToBeacon() {
     if (!this.pathToBeacon.length || this.isFollowingPath) {
       return;
     }
@@ -107,41 +108,49 @@ export class Monster extends BaseSprite {
   }
 
   public update() {
-    this.followPath();
-    // this.colliders.forEach(collider => this.game.physics.arcade.collide(this, collider));
-    // if (this.pathToBeacon && this.pathToBeacon.length) {
-    //   const { x: tileX, y: tileY } = this.pathToBeacon.shift();
-    //   const x = tileX * this.map.tileWidth;
-    //   const y = tileY * this.map.tileHeight;
-    //   this.x = x;
-    //   this.y = y;
-    //   // if (this.x > x) {
-    //   //   this.body.velocity.x = this.attributes.speed * -1;
-    //   // } else {
-    //   //   this.body.velocity.x = this.attributes.speed;
-    //   // }
-    //   // if (this.y > y) {
-    //   //   this.body.velocity.y = this.attributes.speed * -1;
-    //   // } else {
-    //   //   this.body.velocity.y = this.attributes.speed;
-    //   // }
-    // }
-    // go to beacon according to path
-    // if close to player, attack player
-    // if attacked by player go to player
-    // if (this.hero.alive) {
-    //   if (this.position.x > this.hero.position.x) {
-    //     this.body.velocity.x = this.attributes.speed * -1;
-    //   } else {
-    //     this.body.velocity.x = this.attributes.speed;
-    //   }
-    //   if (this.position.y > this.hero.position.y) {
-    //     this.body.velocity.y = this.attributes.speed * -1;
-    //   } else {
-    //     this.body.velocity.y = this.attributes.speed;
-    //   }
-    // }
-    // this.goToBeacon();
+    this.handleColliders();
+    if (this.isHeroInRange()) {
+      this.trackHero();
+    } else if (this.isTrackingHero) {
+      this.resetPathToBeacon();
+    } else {
+      this.followPathToBeacon();
+    }
+  }
+
+  private handleColliders() {
+    this.colliders.forEach(collider => this.game.physics.arcade.collide(this, collider));
+  }
+
+  private resetPathToBeacon() {
+    this.isTrackingHero = false;
+    this.isFollowingPath = false;
+    this.findPathToBeacon();
+    this.startWalking();
+  }
+
+  private trackHero() {
+    this.isTrackingHero = true;
+    this.movingTween.stop();
+    if (this.position.x > this.hero.position.x) {
+      this.body.velocity.x = this.attributes.speed * -1;
+    } else {
+      this.body.velocity.x = this.attributes.speed;
+    }
+    if (this.position.y > this.hero.position.y) {
+      this.body.velocity.y = this.attributes.speed * -1;
+    } else {
+      this.body.velocity.y = this.attributes.speed;
+    }
+  }
+
+  private isHeroInRange() {
+    return (
+      this.hero &&
+      this.hero.alive &&
+      Math.abs(this.position.x - this.hero.position.x) < this.attributes.range &&
+      Math.abs(this.position.y - this.hero.position.y) < this.attributes.range
+    );
   }
 
   private onRevive() {

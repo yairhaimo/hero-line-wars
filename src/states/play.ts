@@ -24,9 +24,10 @@ export class Play extends BaseState {
   create() {
     this.createMap();
     this.configurePathfinding();
+    this.createMonsterGroup();
     this.createBeacon();
-    this.createMonsters();
     this.createHero();
+    this.createMonsters();
   }
 
   private configurePathfinding() {
@@ -45,8 +46,11 @@ export class Play extends BaseState {
     this.beacon.events.onKilled.add(this.gameOver, this);
   }
 
-  private createMonsters() {
+  private createMonsterGroup() {
     this.monsters = this.game.add.group();
+  }
+
+  private createMonsters() {
     this.createMonster();
     this.game.time.events.loop(Phaser.Timer.SECOND * stage.monsters.interval, this.createMonster, this);
   }

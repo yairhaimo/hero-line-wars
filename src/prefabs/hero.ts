@@ -77,11 +77,11 @@ export class Hero extends BaseSprite {
   }
 
   private getClosestMonster() {
-    const sortedByDistance = this.monsters.children.sort(
+    const monstersSortedByDistance = this.monsters.children.sort(
       (a, b) => this.x - a.x + this.y - a.y - (this.x - b.x + this.y - b.y)
     );
-    console.log(sortedByDistance.map(child => ({ x: child.x, y: child.y })));
-    return sortedByDistance[0];
+    console.log(monstersSortedByDistance.map(child => ({ x: child.x, y: child.y })));
+    return monstersSortedByDistance[0];
   }
 
   private addToGame() {
@@ -113,6 +113,22 @@ export class Hero extends BaseSprite {
     return this;
   }
 
+  public kill(): BaseSprite {
+    console.log('killed');
+    this.isDying = true;
+    this.die(() => super.kill());
+    return this;
+  }
+
+  public update() {
+    if (this.isDying) {
+      return;
+    }
+    this.handleColliders();
+    this.handleMovement();
+    this.handleAttack();
+  }
+
   private die(cb) {
     this.stopMoving();
     this.turnRight();
@@ -134,14 +150,7 @@ export class Hero extends BaseSprite {
     this.body.velocity.y = 0;
   }
 
-  public update() {
-    if (this.isDying) {
-      return;
-    }
-    this.colliders.forEach(collider =>
-      this.game.physics.arcade.collide(this, collider, () => this.game.camera.shake(0.0005, 200))
-    );
-    this.handleMovement();
+  private handleAttack() {
     if (this.cursors.right.isDown) {
       this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
       this.turnRight();
@@ -159,17 +168,12 @@ export class Hero extends BaseSprite {
       this.turnDown();
       this.weapon.fire();
     }
-    // const closestMonster = this.getClosestMonster();
-    // if (this.position.x > closestMonster.x) {
-    //   this.body.velocity.x = this.attributes.speed * -1;
-    // } else {
-    //   this.body.velocity.x = this.attributes.speed;
-    // }
-    // if (this.position.y > closestMonster.y) {
-    //   this.body.velocity.y = this.attributes.speed * -1;
-    // } else {
-    //   this.body.velocity.y = this.attributes.speed;
-    // }
+  }
+
+  private handleColliders() {
+    this.colliders.forEach(collider =>
+      this.game.physics.arcade.collide(this, collider, () => this.game.camera.shake(0.0005, 200))
+    );
   }
 
   private handleMovement() {
@@ -209,13 +213,6 @@ export class Hero extends BaseSprite {
     if (!this.isHurting) {
       this.animations.play(this.ANIMATIONS.WALK);
     }
-  }
-
-  kill(): BaseSprite {
-    console.log('killed');
-    this.isDying = true;
-    this.die(() => super.kill());
-    return this;
   }
 
   private turnLeft() {
