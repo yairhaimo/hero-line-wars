@@ -30,21 +30,6 @@ export class Play extends BaseState {
   }
 
   private configurePathfinding() {
-    // const gridIndices = this.map.layers[0].data
-    //   .map((tile, i) => {
-    //     if (this.map.layers[1].data[i] !== 1) {
-    //       return 1;
-    //     }
-    //     return 0;
-    //   })
-
-    // const grid_indices = [];
-    // for (let grid_row = 0; grid_row < this.map.layers[0].data.length; grid_row++) {
-    //   grid_indices[grid_row] = [];
-    //   for (let grid_column = 0; grid_column < world_grid[grid_row].length; grid_column += 1) {
-    //     grid_indices[grid_row][grid_column] = world_grid[grid_row][grid_column].index;
-    //   }
-    // }
     (this.game as Game).pathfinder.setGrid(this.map.layers[1].data, [-1]);
   }
 
@@ -70,9 +55,8 @@ export class Play extends BaseState {
     console.log('num of monsters', this.monsters.children.length);
     if (!monster) {
       monster = new Monster(this.game as Game, {
-        game2: this.game as Game,
-        xPos: stage.monsters.startPosition.x + this.game.rnd.integerInRange(-10, 10),
-        yPos: stage.monsters.startPosition.y + this.game.rnd.integerInRange(-10, 10),
+        xPos: stage.monsters.startPosition.x + this.game.rnd.integerInRange(-20, 20),
+        yPos: stage.monsters.startPosition.y + this.game.rnd.integerInRange(-20, 20),
         colliders: [this.walls],
         hero: this.hero,
         map: this.map,
@@ -87,13 +71,13 @@ export class Play extends BaseState {
       });
       this.monsters.add(monster);
     } else {
-      monster.reset(stage.monsters.startPosition.x, stage.monsters.startPosition.y);
+      monster.revive();
+      monster.reset(stage.monsters.startPosition.x, stage.monsters.startPosition.y, stage.monsters.health);
     }
   }
 
   private createHero() {
-    this.hero = new Hero({
-      game: this.game as Game,
+    this.hero = new Hero(this.game as Game, {
       // xPos: 100,
       // yPos: 385,
       xPos: 2200,
@@ -129,8 +113,6 @@ export class Play extends BaseState {
   private respawnHero() {
     this.hero.revive();
     this.hero.reset(this.beacon.x, this.beacon.y, this.hero.maxHealth);
-    // this.camera.x = this.beacon.x;
-    // this.camera.y = this.beacon.y;
   }
 
   update() {

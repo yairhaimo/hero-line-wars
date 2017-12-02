@@ -8,7 +8,7 @@ export class Hero extends BaseSprite {
     HURT: 'hurt',
     DIE: 'die'
   };
-  private SCALE: number = 0.5;
+  private SCALE: number = 1;
   private isHurting: boolean = false;
   private isDying: boolean = false;
   private cursors: Phaser.CursorKeys;
@@ -19,19 +19,20 @@ export class Hero extends BaseSprite {
     return this.attributes.range > 0;
   }
 
-  constructor({
-    game,
-    xPos,
-    yPos,
-    colliders = [],
-    attributes
-  }: {
-    game: Game;
-    xPos: number;
-    yPos: number;
-    colliders?: any[];
-    attributes: IHero;
-  }) {
+  constructor(
+    public game: Game,
+    {
+      xPos,
+      yPos,
+      colliders = [],
+      attributes
+    }: {
+      xPos: number;
+      yPos: number;
+      colliders?: any[];
+      attributes: IHero;
+    }
+  ) {
     super(game, xPos, yPos, assets.HERO);
     this.init();
     this.addToGame();

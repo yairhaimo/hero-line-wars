@@ -15,14 +15,13 @@ export class Monster extends BaseSprite {
   private attributes: IMonster;
   private beacon: Beacon;
   private map: Phaser.Tilemap;
-  private pathToBeacon;
+  private pathToBeacon: { x: number; y: number }[];
   private isFollowingPath: boolean = false;
   private movingTween: Phaser.Tween;
 
   constructor(
     public game: Game,
     {
-      game2,
       xPos,
       yPos,
       colliders = [],
@@ -31,7 +30,6 @@ export class Monster extends BaseSprite {
       map,
       attributes
     }: {
-      game2: Game;
       xPos: number;
       yPos: number;
       colliders?: any[];
@@ -42,14 +40,17 @@ export class Monster extends BaseSprite {
     }
   ) {
     super(game, xPos, yPos, assets.MONSTER);
-    this.init();
     this.colliders = colliders;
     this.hero = hero;
     this.beacon = beacon;
     this.map = map;
     this.attributes = attributes;
     this.health = attributes.health;
-    this.goToBeacon();
+    this.init();
+    this.findPathToBeacon();
+    this.startWalking();
+
+    this.events.onRevived.add(() => this.onRevive, this);
   }
 
   private init() {
@@ -58,6 +59,9 @@ export class Monster extends BaseSprite {
     this.game.physics.arcade.enable(this);
     this.body.collideWorldBounds = true;
     this.defineAnimation();
+  }
+
+  private startWalking() {
     this.animations.play(this.ANIMATIONS.WALK);
     this.movingTween = this.game.add.tween(this);
     this.movingTween.onComplete.add(() => {
@@ -78,7 +82,6 @@ export class Monster extends BaseSprite {
     // console.log('calc', [startTileX, startTileY], [endTileX, endTileY]);
     const pathfinder = this.game.pathfinder;
     pathfinder.setCallbackFunction(path => {
-      console.log('path is', path);
       this.pathToBeacon = path;
     });
     pathfinder.preparePathCalculation([startTileX, startTileY], [endTileX, endTileY]);
@@ -94,9 +97,8 @@ export class Monster extends BaseSprite {
       return;
     }
 
-    const x = next.x * 32 + 2;
-    const y = next.y * 32 + 2;
-    console.log('moving to', x, y, next);
+    const x = next.x * this.map.tileWidth + 2;
+    const y = next.y * this.map.tileHeight + 2;
     this.isFollowingPath = true;
     this.movingTween.target = this;
     this.movingTween.timeline = [];
@@ -142,17 +144,11 @@ export class Monster extends BaseSprite {
     // this.goToBeacon();
   }
 
-  private goToBeacon() {
+  private onRevive() {
+    this.pathToBeacon = [];
+    this.isFollowingPath = false;
+    this.frame = 0;
     this.findPathToBeacon();
-    // if (this.position.x > this.beacon.position.x) {
-    //   this.body.velocity.x = this.attributes.speed * -1;
-    // } else {
-    //   this.body.velocity.x = this.attributes.speed;
-    // }
-    // if (this.position.y > this.beacon.position.y) {
-    //   this.body.velocity.y = this.attributes.speed * -1;
-    // } else {
-    //   this.body.velocity.y = this.attributes.speed;
-    // }
+    this.startWalking();
   }
 }
