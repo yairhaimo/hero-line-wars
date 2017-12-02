@@ -1,9 +1,9 @@
 import { BaseSprite } from './baseSprite';
-import { assets } from '../definitions';
+import { assets, scale } from '../definitions';
 import { Game } from '../game';
 
 export class Beacon extends BaseSprite implements IBeacon {
-  private SCALE: number = 0.5;
+  protected SCALE: number = scale;
   private colliders: any[];
   private attributes: IBeacon;
 

@@ -13,7 +13,7 @@ export class Play extends BaseState {
   private hero: Hero;
   private beacon: Beacon;
   private map: Phaser.Tilemap;
-  private roads: Phaser.TilemapLayer;
+  private path: Phaser.TilemapLayer;
   private walls: Phaser.TilemapLayer;
   private monsters: Phaser.Group;
 
@@ -83,10 +83,10 @@ export class Play extends BaseState {
 
   private createHero() {
     this.hero = new Hero(this.game as Game, {
-      // xPos: 100,
-      // yPos: 385,
-      xPos: 2200,
-      yPos: 150,
+      xPos: 100,
+      yPos: 400,
+      // xPos: 1600,
+      // yPos: 180,
       colliders: [this.walls],
       monsters: this.monsters,
       attributes: {
@@ -102,14 +102,55 @@ export class Play extends BaseState {
   }
 
   private createMap() {
-    this.map = this.game.add.tilemap(this.assets.MAP);
-    this.map.addTilesetImage(this.assets.ROAD);
-    this.map.addTilesetImage(this.assets.WALL);
-    this.roads = this.map.createLayer(this.assets.ROAD);
-    this.walls = this.map.createLayer(this.assets.WALL);
-    this.roads.resizeWorld();
-    const WALL_TILE = 2; // check map.json for tile number
-    this.map.setCollision(WALL_TILE, true, this.assets.WALL);
+    this.map = this.game.add.tilemap(this.assets.MAP2);
+    this.map.addTilesetImage(this.assets.ALL);
+    const background = this.map.createLayer(this.assets.BACKGROUND);
+    this.path = this.map.createLayer(this.assets.PATH);
+    this.walls = this.map.createLayer(this.assets.WALLS);
+    this.map.createLayer(this.assets.DECORATIONS);
+    background.resizeWorld();
+    const WALL_TILES = [
+      0,
+      7,
+      64,
+      521,
+      522,
+      577,
+      578,
+      635,
+      636,
+      706,
+      709,
+      764,
+      820,
+      821,
+      822,
+      824,
+      825,
+      834,
+      838,
+      876,
+      879,
+      881,
+      890,
+      891,
+      894,
+      895,
+      1065,
+      1179,
+      1610613442,
+      1610613445,
+      2684355266,
+      2684355269,
+      2684355324,
+      2684355441,
+      2684355448,
+      3221226178,
+      3221226181,
+      3221226239,
+      3221226353
+    ]; // check map.json for tile number
+    this.map.setCollision(WALL_TILES, true, this.assets.WALLS);
   }
 
   private startHeroRespawn() {

@@ -1,5 +1,5 @@
 import { BaseSprite } from './baseSprite';
-import { assets } from '../definitions';
+import { assets, scale } from '../definitions';
 import { Game } from '../game';
 import { Hero } from './hero';
 import { Beacon } from './beacon';
@@ -8,13 +8,13 @@ export class Monster extends BaseSprite {
   private ANIMATIONS = {
     WALK: 'walk'
   };
-  private SCALE: number = 0.5;
+  protected SCALE: number = scale;
   private cursors: Phaser.CursorKeys;
   private colliders: any[];
   private hero: Hero;
   private beacon: Beacon;
   private map: Phaser.Tilemap;
-  private pathToBeacon: { x: number; y: number }[];
+  private pathToBeacon: { x: number; y: number }[] = [];
   private isFollowingPath: boolean = false;
   private movingTween: Phaser.Tween;
   private isTrackingHero: boolean;
@@ -90,7 +90,7 @@ export class Monster extends BaseSprite {
   }
 
   private followPathToBeacon() {
-    if (!this.pathToBeacon.length || this.isFollowingPath) {
+    if (!this.pathToBeacon || !this.pathToBeacon.length || this.isFollowingPath) {
       return;
     }
     const next = this.pathToBeacon.shift();

@@ -1,5 +1,5 @@
 import { BaseSprite } from './baseSprite';
-import { assets } from '../definitions';
+import { assets, scale } from '../definitions';
 import { Game } from '../game';
 import { Monster } from './monster';
 
@@ -9,7 +9,7 @@ export class Hero extends BaseSprite {
     HURT: 'hurt',
     DIE: 'die'
   };
-  private SCALE: number = 1;
+  protected SCALE: number = scale;
   private isHurting: boolean = false;
   private isDying: boolean = false;
   private cursors: Phaser.CursorKeys;
@@ -145,11 +145,6 @@ export class Hero extends BaseSprite {
     });
   }
 
-  private stopMoving() {
-    this.body.velocity.x = 0;
-    this.body.velocity.y = 0;
-  }
-
   private handleAttack() {
     if (this.cursors.right.isDown) {
       this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
@@ -213,26 +208,6 @@ export class Hero extends BaseSprite {
     if (!this.isHurting) {
       this.animations.play(this.ANIMATIONS.WALK);
     }
-  }
-
-  private turnLeft() {
-    this.scale.setTo(this.SCALE * -1, this.SCALE);
-    this.angle = 0;
-  }
-
-  private turnRight() {
-    this.scale.setTo(this.SCALE);
-    this.angle = 0;
-  }
-
-  private turnUp() {
-    this.turnRight();
-    this.angle = -90;
-  }
-
-  private turnDown() {
-    this.turnRight();
-    this.angle = 90;
   }
 
   private onRevive() {

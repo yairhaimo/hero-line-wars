@@ -10,9 +10,10 @@ export class Load extends BaseState {
     // load assets for game
     this.loadSpritesheet(this.assets.HERO);
     this.loadSpritesheet(this.assets.MONSTER);
-    this.loadTileMap(this.assets.MAP);
-    this.loadImage(this.assets.ROAD);
-    this.loadImage(this.assets.WALL);
+    this.loadSpritesheet(this.assets.ALL, 16, 16, 1);
+    this.loadTileMap(this.assets.MAP2);
+    // this.loadImage(this.assets.PATH);
+    // this.loadImage(this.assets.WALL);
     this.loadImage(this.assets.PARTICLE);
     this.loadImage(this.assets.BEACON);
   }
