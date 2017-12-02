@@ -5,7 +5,7 @@
     "health": 30,
     "mana": 0,
     "range": 100,
-    "speed": 150,
+    "speed": 450,
     "xp": 10,
     "coins": 1,
     "startPosition": {

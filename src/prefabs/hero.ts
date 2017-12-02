@@ -21,6 +21,10 @@ export class Hero extends BaseSprite {
   public attributes: IHero;
   public isRespawning: boolean = false;
   public weapon: Phaser.Weapon;
+  public xp: number = 0;
+  public kills: number = 0;
+  public coins: number = 0;
+  public level: number = 0;
 
   constructor(
     public game: Game,

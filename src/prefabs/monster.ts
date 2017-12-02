@@ -103,7 +103,7 @@ export class Monster extends BaseSprite {
     this.isFollowingPath = true;
     this.movingTween.target = this;
     this.movingTween.timeline = [];
-    this.movingTween.to({ x, y }, 300);
+    this.movingTween.to({ x, y }, Phaser.Timer.SECOND / (this.attributes.speed / 20));
     this.movingTween.start();
   }
 
@@ -159,5 +159,9 @@ export class Monster extends BaseSprite {
     this.frame = 0;
     this.findPathToBeacon();
     this.startWalking();
+  }
+
+  private onKilled() {
+    this.hero.xp += this.attributes.xp;
   }
 }

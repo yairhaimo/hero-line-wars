@@ -34,14 +34,7 @@ export class Play extends BaseState {
   }
 
   private createHUD() {
-    this.hud = new HUD(this.game as Game, {
-      health: this.hero.health,
-      xp: 0,
-      kills: 0,
-      coins: 0,
-      level: 1,
-      beaconHealth: this.beacon.health
-    });
+    this.hud = new HUD(this.game as Game, this.hero, this.beacon);
   }
 
   private configurePathfinding() {
@@ -85,7 +78,8 @@ export class Play extends BaseState {
           health: stage.monsters.health,
           mana: stage.monsters.mana,
           range: stage.monsters.range,
-          speed: stage.monsters.speed
+          speed: stage.monsters.speed,
+          xp: stage.monsters.xp
         }
       });
       this.monsters.add(monster);
@@ -177,7 +171,7 @@ export class Play extends BaseState {
   private respawnHero() {
     this.hero.revive();
     this.hero.reset(this.beacon.x, this.beacon.y, this.hero.maxHealth);
-    this.hud.changeHealth(this.hero.health);
+    this.hud.updateHUD();
   }
 
   update() {
@@ -193,13 +187,13 @@ export class Play extends BaseState {
 
   private damageHero(hero: Hero, monster: Monster) {
     hero.damage(monster.attributes.damage);
-    this.hud.changeHealth(this.hero.health);
+    this.hud.updateHUD();
     monster.kill();
   }
 
   private damageBeacon(beacon: Beacon, monster: Monster) {
     beacon.damage(monster.attributes.damage);
-    this.hud.changeBeaconHealth(this.beacon.health);
+    this.hud.updateHUD();
     monster.kill();
   }
 

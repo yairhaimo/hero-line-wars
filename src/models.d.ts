@@ -8,7 +8,9 @@ interface IMob {
 
 interface IHero extends IMob {}
 
-interface IMonster extends IMob {}
+interface IMonster extends IMob {
+  xp: number;
+}
 
 interface IHUD {
   health: number;

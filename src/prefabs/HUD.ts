@@ -1,6 +1,8 @@
 import { BaseSprite } from './baseSprite';
 import { assets, scale } from '../definitions';
 import { Game } from '../game';
+import { Hero } from './hero';
+import { Beacon } from './beacon';
 
 export class HUD {
   private healthHUD = {
@@ -46,13 +48,17 @@ export class HUD {
     value: 0
   };
 
-  constructor(private game: Game, { health, coins, xp, kills, level, beaconHealth }) {
-    this.changeHealth(health);
-    this.changeCoins(coins);
-    this.changeXP(xp);
-    this.changeKills(kills);
-    this.changeLevel(level);
-    this.changeBeaconHealth(beaconHealth);
+  constructor(private game: Game, private hero: Hero, private beacon: Beacon) {
+    this.updateHUD();
+  }
+
+  public updateHUD() {
+    this.changeHealth(this.hero.health);
+    this.changeBeaconHealth(this.beacon.health);
+    this.changeXP(this.hero.xp);
+    this.changeKills(this.hero.kills);
+    this.changeCoins(this.hero.coins);
+    this.changeLevel(this.hero.level);
   }
 
   public changeHealth(health) {
